@@ -1,9 +1,9 @@
 {
-  "name": "perspective-viewer-template",
+  "name": "perspective-viewer-sunburst",
   "version": "0.0.1",
   "main": "src/js/plugin/plugin.js",
   "files": [
-      "build/**/*"
+    "build/**/*"
   ],
   "author": "",
   "license": "Apache-2.0",
