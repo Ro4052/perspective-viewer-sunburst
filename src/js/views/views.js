@@ -7,7 +7,7 @@
  *
  */
 
-import view1 from "./view-1";
+import sunburst from "./sunburst";
 
-const views = [view1];
+const views = [sunburst];
 export default views;
