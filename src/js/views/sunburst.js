@@ -63,15 +63,16 @@ function sunburst(container, settings) {
         .attr("r", radius)
         .attr("fill", "none")
         .attr("pointer-events", "all")
-        .datum(data)
-        .on("click", d => clicked(d, data, sunburstElement, parent, parentTitle, path, label, radius));
+        .datum(data);
 
+    const clickHandler = clicked(data, sunburstElement, parent, parentTitle, path, label, radius);
+    parent.on("click", clickHandler);
     path.filter(d => d.children)
         .style("cursor", "pointer")
-        .on("click", d => clicked(d, data, sunburstElement, parent, parentTitle, path, label, radius));
+        .on("click", clickHandler);
 }
 
-function clicked(p, data, g, parent, parentTitle, path, label, radius) {
+const clicked = (data, g, parent, parentTitle, path, label, radius) => p => {
     if (p.parent) {
         parent.datum(p.parent);
         parent.style("cursor", "pointer");
@@ -110,7 +111,7 @@ function clicked(p, data, g, parent, parentTitle, path, label, radius) {
         .transition(t)
         .attr("fill-opacity", d => +labelVisible(d.target))
         .attrTween("transform", d => () => labelTransform(d.current, radius));
-}
+};
 
 const arc = radius =>
     d3
