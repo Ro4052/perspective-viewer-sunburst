@@ -27,16 +27,15 @@ function sunburst(container, settings) {
         .append("g")
         .attr("transform", `translate(${containerWidth / 2}, ${containerHeight / 2})`);
 
-    const sunburstPath = sunburstElement
+    const path = sunburstElement
         .append("g")
         .selectAll("path")
         .data(data.descendants().slice(1))
         .join("path")
         .attr("fill", d => color(d.data.color))
-        .attr("fill-opacity", d => (arcVisible(d.current) ? (d.children ? 1 : 0.7) : 0))
-        .attr("d", arc(radius));
-    sunburstPath.filter(d => d.children).style("cursor", "pointer");
-    sunburstPath.append("title").text(
+        .attr("fill-opacity", d => (arcVisible(d.current) ? (d.children ? 1 : 0.5) : 0))
+        .attr("d", d => arc(radius)(d.current));
+    path.append("title").text(
         d =>
             `${d
                 .ancestors()
@@ -45,7 +44,7 @@ function sunburst(container, settings) {
                 .join("/")}\n${d3.format(",d")(d.value)}`
     );
 
-    sunburstElement
+    const label = sunburstElement
         .append("g")
         .attr("pointer-events", "none")
         .attr("text-anchor", "middle")
@@ -58,14 +57,52 @@ function sunburst(container, settings) {
         .attr("transform", d => labelTransform(d.current, radius))
         .text(d => d.data.name);
 
-    sunburstElement
+    const parent = sunburstElement
         .append("circle")
         .datum(data)
         .attr("r", radius)
         .attr("fill", "none")
         .attr("pointer-events", "all");
+    parent.on("click", d => clicked(d, data, sunburstElement, parent, path, label, radius));
+
+    path.filter(d => d.children)
+        .style("cursor", "pointer")
+        .on("click", d => clicked(d, data, sunburstElement, parent, path, label, radius));
 
     console.log(container);
+}
+
+function clicked(p, data, g, parent, path, label, radius) {
+    parent.datum(p.parent || data);
+    data.each(
+        d =>
+            (d.target = {
+                x0: Math.max(0, Math.min(1, (d.x0 - p.x0) / (p.x1 - p.x0))) * 2 * Math.PI,
+                x1: Math.max(0, Math.min(1, (d.x1 - p.x0) / (p.x1 - p.x0))) * 2 * Math.PI,
+                y0: Math.max(0, d.y0 - p.depth),
+                y1: Math.max(0, d.y1 - p.depth)
+            })
+    );
+
+    const t = g.transition().duration(750);
+    path.transition(t)
+        .tween("data", d => {
+            const i = d3.interpolate(d.current, d.target);
+            return t => (d.current = i(t));
+        })
+        .filter(function(d) {
+            return +this.getAttribute("fill-opacity") || arcVisible(d.target);
+        })
+        .attr("fill-opacity", d => (arcVisible(d.target) ? (d.children ? 1 : 0.7) : 0))
+        .attrTween("d", d => () => arc(radius)(d.current));
+
+    label
+        .filter(function(d) {
+            return +this.getAttribute("fill-opacity") || labelVisible(d.target);
+        })
+        .transition(t)
+        .attr("fill-opacity", d => +labelVisible(d.target))
+        .attrTween("transform", d => () => labelTransform(d.current, radius));
 }
 
 const arc = radius =>
