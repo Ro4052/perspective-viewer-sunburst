@@ -7,12 +7,13 @@
  *
  */
 
-import {treeData} from "../data/treeData";
+import {treeData, treeColor} from "../data/treeData";
 
 function sunburst(container, settings) {
     console.log(settings);
     const data = treeData(settings);
     console.log(data);
+    console.log(treeColor(settings));
 }
 sunburst.plugin = {
     type: "d3_sunburst",

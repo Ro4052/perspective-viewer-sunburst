@@ -18,6 +18,7 @@
     "@jpmorganchase/perspective-viewer-highcharts": "^0.2.12",
     "@jpmorganchase/perspective-viewer-hypergrid": "^0.2.12",
     "d3": "^5.9.2",
+    "d3fc-extent": "^2.2.2",
     "less": "^3.9.0"
   },
   "devDependencies": {

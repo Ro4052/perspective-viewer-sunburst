@@ -8,6 +8,7 @@
  */
 
 import * as d3 from "d3";
+import {extentLinear} from "d3fc-extent";
 
 export function treeData(settings) {
     const children = [];
@@ -38,4 +39,12 @@ export function treeData(settings) {
     const data = d3.partition().size([2 * Math.PI, root.height + 1])(root);
 
     return data;
+}
+
+export function treeColor(settings) {
+    if (settings.aggregates.length > 1) {
+        const colorDomain = extentLinear().accessors([d => d[settings.aggregates[1].column]])(settings.data);
+        return d3.scaleSequential(d3.interpolateViridis).domain(colorDomain);
+    }
+    return () => "rgb(31, 119, 180)";
 }

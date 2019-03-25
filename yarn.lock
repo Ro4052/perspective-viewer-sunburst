@@ -2233,7 +2233,7 @@ cyclist@~0.2.2:
   resolved "https://registry.yarnpkg.com/cyclist/-/cyclist-0.2.2.tgz#1b33792e11e914a2fd6d6ed6447464444e5fa640"
   integrity sha1-GzN5LhHpFKL9bW7WRHRkRE5fpkA=
 
-d3-array@1, d3-array@^1.1.1, d3-array@^1.2.0, d3-array@^1.2.1:
+d3-array@1, d3-array@^1.0.0, d3-array@^1.1.1, d3-array@^1.2.0, d3-array@^1.2.1:
   version "1.2.4"
   resolved "https://registry.yarnpkg.com/d3-array/-/d3-array-1.2.4.tgz#635ce4d5eea759f6f605863dbcfc30edc737f71f"
   integrity sha512-KHW6M86R+FUPYGb3R5XiYjXPq7VzwxZ22buHhAEVG5ztoEcZZMLov530mmccaqA1GghZArjQV46fuc8kUqhhHw==
@@ -2480,6 +2480,13 @@ d3@^5.9.2:
     d3-transition "1"
     d3-voronoi "1"
     d3-zoom "1"
+
+d3fc-extent@^2.2.2:
+  version "2.2.2"
+  resolved "https://registry.yarnpkg.com/d3fc-extent/-/d3fc-extent-2.2.2.tgz#3cc513978aee72da0c52f9d659777e3af5e4ca90"
+  integrity sha1-PMUTl4ructoMUvnWWXd+OvXkypA=
+  dependencies:
+    d3-array "^1.0.0"
 
 dashdash@^1.12.0:
   version "1.14.1"
