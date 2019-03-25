@@ -33,6 +33,7 @@ function sunburst(container, settings) {
         .data(data.descendants().slice(1))
         .join("path")
         .attr("fill", d => color(d.data.color))
+        .attr("fill-opacity", d => (arcVisible(d.current) ? (d.children ? 1 : 0.7) : 0))
         .attr("d", arc(radius));
     sunburstPath.filter(d => d.children).style("cursor", "pointer");
 
@@ -67,6 +68,8 @@ const arc = radius =>
         .padRadius(radius)
         .innerRadius(d => d.y0 * radius)
         .outerRadius(d => Math.max(d.y0 * radius, d.y1 * radius - 1));
+
+const arcVisible = d => d.y1 <= 3 && d.y0 >= 1 && d.x1 > d.x0;
 
 const labelVisible = d => d.y1 <= 3 && d.y0 >= 1 && (d.y1 - d.y0) * (d.x1 - d.x0) > 0.03;
 
