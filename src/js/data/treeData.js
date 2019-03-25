@@ -34,7 +34,7 @@ export function treeData(settings) {
         });
     });
 
-    const tree = {children};
+    const tree = {name: "root", children};
     const root = d3.hierarchy(tree).sum(d => d.size);
     const data = d3.partition().size([2 * Math.PI, root.height + 1])(root);
 

@@ -57,23 +57,23 @@ function sunburst(container, settings) {
         .attr("transform", d => labelTransform(d.current, radius))
         .text(d => d.data.name);
 
+    const parentTitle = sunburstElement.append("text").attr("text-anchor", "middle");
     const parent = sunburstElement
         .append("circle")
-        .datum(data)
         .attr("r", radius)
         .attr("fill", "none")
-        .attr("pointer-events", "all");
-    parent.on("click", d => clicked(d, data, sunburstElement, parent, path, label, radius));
+        .attr("pointer-events", "all")
+        .datum(data)
+        .on("click", d => clicked(d, data, sunburstElement, parent, parentTitle, path, label, radius));
 
     path.filter(d => d.children)
         .style("cursor", "pointer")
-        .on("click", d => clicked(d, data, sunburstElement, parent, path, label, radius));
-
-    console.log(container);
+        .on("click", d => clicked(d, data, sunburstElement, parent, parentTitle, path, label, radius));
 }
 
-function clicked(p, data, g, parent, path, label, radius) {
+function clicked(p, data, g, parent, parentTitle, path, label, radius) {
     parent.datum(p.parent || data);
+    parentTitle.text(p.parent ? p.parent.data.name : "");
     data.each(
         d =>
             (d.target = {
