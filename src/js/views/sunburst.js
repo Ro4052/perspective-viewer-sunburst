@@ -19,7 +19,7 @@ function sunburst(container, settings) {
     const color = treeColor(settings);
     data.each(d => (d.current = d));
 
-    const sunburstSvg = d3
+    const sunburstElement = d3
         .select(container)
         .append("svg")
         .style("width", "100%")
@@ -27,7 +27,7 @@ function sunburst(container, settings) {
         .append("g")
         .attr("transform", `translate(${containerWidth / 2}, ${containerHeight / 2})`);
 
-    const sunburstPath = sunburstSvg
+    const sunburstPath = sunburstElement
         .append("g")
         .selectAll("path")
         .data(data.descendants().slice(1))
@@ -36,8 +36,16 @@ function sunburst(container, settings) {
         .attr("fill-opacity", d => (arcVisible(d.current) ? (d.children ? 1 : 0.7) : 0))
         .attr("d", arc(radius));
     sunburstPath.filter(d => d.children).style("cursor", "pointer");
+    sunburstPath.append("title").text(
+        d =>
+            `${d
+                .ancestors()
+                .map(d => d.data.name)
+                .reverse()
+                .join("/")}\n${d3.format(",d")(d.value)}`
+    );
 
-    sunburstSvg
+    sunburstElement
         .append("g")
         .attr("pointer-events", "none")
         .attr("text-anchor", "middle")
@@ -46,10 +54,11 @@ function sunburst(container, settings) {
         .data(data.descendants().slice(1))
         .join("text")
         .attr("dy", "0.35em")
-        .attr("fill-opacity", d => labelVisible(d.current))
-        .attr("transform", d => labelTransform(d.current, radius));
+        .attr("fill-opacity", d => +labelVisible(d.current))
+        .attr("transform", d => labelTransform(d.current, radius))
+        .text(d => d.data.name);
 
-    sunburstSvg
+    sunburstElement
         .append("circle")
         .datum(data)
         .attr("r", radius)
@@ -71,7 +80,7 @@ const arc = radius =>
 
 const arcVisible = d => d.y1 <= 3 && d.y0 >= 1 && d.x1 > d.x0;
 
-const labelVisible = d => d.y1 <= 3 && d.y0 >= 1 && (d.y1 - d.y0) * (d.x1 - d.x0) > 0.03;
+const labelVisible = d => d.y1 <= 3 && d.y0 >= 1 && (d.y1 - d.y0) * (d.x1 - d.x0) > 0.05;
 
 function labelTransform(d, radius) {
     const x = (((d.x0 + d.x1) / 2) * 180) / Math.PI;

@@ -44,7 +44,7 @@ export function treeData(settings) {
 export function treeColor(settings) {
     if (settings.aggregates.length > 1) {
         const colorDomain = extentLinear().accessors([d => d[settings.aggregates[1].column]])(settings.data);
-        return d3.scaleSequential(d3.interpolateViridis).domain(colorDomain);
+        return d3.scaleSequential(d3.interpolateRainbow).domain(colorDomain);
     }
     return () => "rgb(31, 119, 180)";
 }
