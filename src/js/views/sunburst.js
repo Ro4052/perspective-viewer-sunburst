@@ -76,11 +76,11 @@ const clicked = (data, g, parent, parentTitle, path, label, radius) => p => {
     if (p.parent) {
         parent.datum(p.parent);
         parent.style("cursor", "pointer");
-        parentTitle.text(p.parent.data.name);
+        parentTitle.html(`&#8682; ${p.parent.data.name}`);
     } else {
         parent.datum(data);
         parent.style("cursor", "default");
-        parentTitle.text("");
+        parentTitle.html("");
     }
     data.each(
         d =>
