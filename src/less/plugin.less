@@ -6,20 +6,19 @@
  * the Apache License 2.0.  The full license can be found in the LICENSE file.
  *
  */
- @sans-serif-fonts: Arial, sans-serif;
+@sans-serif-fonts: Arial, sans-serif;
 
- :host {
-     #container {
-         position: absolute;
-         left: 0;
-         top: 0;
-         right: 0;
-         bottom: 0;
-         padding: 15px;
-         overflow: auto;
+:host {
+  #container {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    padding: 0;
+    overflow: none;
 
-         // example using themes
-         background: var(--myplugin-background, rgb(250, 250, 250));
-    }
- }
- 
+    // example using themes
+    background: var(--myplugin-background, rgb(250, 250, 250));
+  }
+}
