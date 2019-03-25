@@ -7,14 +7,21 @@
  *
  */
 
+import {treeData} from "../data/treeData";
+
 function sunburst(container, settings) {
-    console.log(container);
     console.log(settings);
+    const data = treeData(settings);
+    console.log(data);
 }
 sunburst.plugin = {
     type: "d3_sunburst",
     name: "[D3] Sunburst",
-    max_size: 25000
+    max_size: 25000,
+    initial: {
+        type: "number",
+        count: 2
+    }
 };
 
 export default sunburst;
