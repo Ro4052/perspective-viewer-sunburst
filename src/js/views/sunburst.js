@@ -93,7 +93,7 @@ function clicked(p, data, g, parent, path, label, radius) {
         .filter(function(d) {
             return +this.getAttribute("fill-opacity") || arcVisible(d.target);
         })
-        .attr("fill-opacity", d => (arcVisible(d.target) ? (d.children ? 1 : 0.7) : 0))
+        .attr("fill-opacity", d => (arcVisible(d.target) ? (d.children ? 1 : 0.5) : 0))
         .attrTween("d", d => () => arc(radius)(d.current));
 
     label
