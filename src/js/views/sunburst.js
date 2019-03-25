@@ -72,8 +72,15 @@ function sunburst(container, settings) {
 }
 
 function clicked(p, data, g, parent, parentTitle, path, label, radius) {
-    parent.datum(p.parent || data);
-    parentTitle.text(p.parent ? p.parent.data.name : "");
+    if (p.parent) {
+        parent.datum(p.parent);
+        parent.style("cursor", "pointer");
+        parentTitle.text(p.parent.data.name);
+    } else {
+        parent.datum(data);
+        parent.style("cursor", "default");
+        parentTitle.text("");
+    }
     data.each(
         d =>
             (d.target = {
