@@ -17,14 +17,27 @@ const template = `<template id="${name}"><div id="container"></div></template>`;
 class TemplateElement extends HTMLElement {
     connectedCallback() {
         this._container = this.shadowRoot.querySelector("#container");
+        this._view = null;
+        this._settings = null;
     }
 
     render(view, settings) {
-        this._container.innerHTML = "";
-        view(this._container, settings);
+        this._view = view;
+        this._settings = settings;
+        this.remove();
+        this.draw();
+    }
+
+    draw() {
+        this._view(this._container, this._settings);
     }
 
     resize() {
-        // Called by perspective-viewer when the container is resized
+        this.remove();
+        this.draw();
+    }
+
+    remove() {
+        this._container.innerHTML = "";
     }
 }
