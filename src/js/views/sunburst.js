@@ -23,7 +23,7 @@ function sunburst(container, settings) {
         .select(container)
         .append("svg")
         .style("width", "100%")
-        .style("height", "100%")
+        .style("height", containerHeight - padding / 2)
         .append("g")
         .attr("transform", `translate(${containerWidth / 2}, ${containerHeight / 2})`);
 
