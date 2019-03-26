@@ -9,7 +9,7 @@
 
 import {select} from "d3";
 import {treeData, treeColor} from "../data/treeData";
-import {clicked} from "../interaction/clicked";
+import {clickHandler} from "../interaction/clickHandler";
 import {arc, arcVisible} from "../arc/arc";
 import {labelVisible, labelTransform} from "../label/label";
 
@@ -59,11 +59,11 @@ function sunburst(container, settings) {
         .attr("pointer-events", "all")
         .datum(data);
 
-    const clickHandler = clicked(data, sunburstElement, parent, parentTitle, path, label, radius);
-    parent.on("click", clickHandler);
+    const onClick = clickHandler(data, sunburstElement, parent, parentTitle, path, label, radius);
+    parent.on("click", onClick);
     path.filter(d => d.children)
         .style("cursor", "pointer")
-        .on("click", clickHandler);
+        .on("click", onClick);
 }
 sunburst.plugin = {
     type: "d3_sunburst",

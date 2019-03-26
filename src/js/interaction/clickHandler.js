@@ -2,7 +2,7 @@ import {interpolate} from "d3";
 import {arc, arcVisible} from "../arc/arc";
 import {labelVisible, labelTransform} from "../label/label";
 
-export const clicked = (data, g, parent, parentTitle, path, label, radius) => p => {
+export const clickHandler = (data, g, parent, parentTitle, path, label, radius) => p => {
     if (p.parent) {
         parent.datum(p.parent);
         parent.style("cursor", "pointer");
