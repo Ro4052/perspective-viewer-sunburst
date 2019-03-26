@@ -8,7 +8,7 @@
  */
 
 import {select} from "d3";
-import {treeData, treeColor} from "../data/treeData";
+import {treeData} from "../data/treeData";
 import {clickHandler} from "../interaction/clickHandler";
 import {arc, arcVisible} from "../arc/arc";
 import {labelVisible, labelTransform} from "../label/label";
@@ -18,8 +18,7 @@ function sunburst(container, settings) {
     const padding = 30;
     const radius = (Math.min(containerWidth, containerHeight) - padding) / 6;
 
-    const data = treeData(settings);
-    const color = treeColor(settings);
+    const {data, color} = treeData(settings)[0];
     data.each(d => (d.current = d));
 
     const sunburstElement = select(container)
