@@ -7,8 +7,11 @@
  *
  */
 
-import * as d3 from "d3";
+import {select} from "d3";
 import {treeData, treeColor} from "../data/treeData";
+import {clicked} from "../interaction/clicked";
+import {arc, arcVisible} from "../arc/arc";
+import {labelVisible, labelTransform} from "../label/label";
 
 function sunburst(container, settings) {
     const {width: containerWidth, height: containerHeight} = container.getBoundingClientRect();
@@ -19,8 +22,7 @@ function sunburst(container, settings) {
     const color = treeColor(settings);
     data.each(d => (d.current = d));
 
-    const sunburstElement = d3
-        .select(container)
+    const sunburstElement = select(container)
         .append("svg")
         .style("width", "100%")
         .style("height", containerHeight - padding / 2)
@@ -35,14 +37,6 @@ function sunburst(container, settings) {
         .attr("fill", d => color(d.data.color))
         .attr("fill-opacity", d => (arcVisible(d.current) ? (d.children ? 1 : 0.5) : 0))
         .attr("d", d => arc(radius)(d.current));
-    path.append("title").text(
-        d =>
-            `${d
-                .ancestors()
-                .map(d => d.data.name)
-                .reverse()
-                .join("/")}\n${d3.format(",d")(d.value)}`
-    );
 
     const label = sunburstElement
         .append("g")
@@ -71,68 +65,6 @@ function sunburst(container, settings) {
         .style("cursor", "pointer")
         .on("click", clickHandler);
 }
-
-const clicked = (data, g, parent, parentTitle, path, label, radius) => p => {
-    if (p.parent) {
-        parent.datum(p.parent);
-        parent.style("cursor", "pointer");
-        parentTitle.html(`&#8682; ${p.parent.data.name}`);
-    } else {
-        parent.datum(data);
-        parent.style("cursor", "default");
-        parentTitle.html("");
-    }
-    data.each(
-        d =>
-            (d.target = {
-                x0: Math.max(0, Math.min(1, (d.x0 - p.x0) / (p.x1 - p.x0))) * 2 * Math.PI,
-                x1: Math.max(0, Math.min(1, (d.x1 - p.x0) / (p.x1 - p.x0))) * 2 * Math.PI,
-                y0: Math.max(0, d.y0 - p.depth),
-                y1: Math.max(0, d.y1 - p.depth)
-            })
-    );
-
-    const t = g.transition().duration(750);
-    path.transition(t)
-        .tween("data", d => {
-            const i = d3.interpolate(d.current, d.target);
-            return t => (d.current = i(t));
-        })
-        .filter(function(d) {
-            return +this.getAttribute("fill-opacity") || arcVisible(d.target);
-        })
-        .attr("fill-opacity", d => (arcVisible(d.target) ? (d.children ? 1 : 0.5) : 0))
-        .attrTween("d", d => () => arc(radius)(d.current));
-
-    label
-        .filter(function(d) {
-            return +this.getAttribute("fill-opacity") || labelVisible(d.target);
-        })
-        .transition(t)
-        .attr("fill-opacity", d => +labelVisible(d.target))
-        .attrTween("transform", d => () => labelTransform(d.current, radius));
-};
-
-const arc = radius =>
-    d3
-        .arc()
-        .startAngle(d => d.x0)
-        .endAngle(d => d.x1)
-        .padAngle(d => Math.min((d.x1 - d.x0) / 2, 0.005))
-        .padRadius(radius)
-        .innerRadius(d => d.y0 * radius)
-        .outerRadius(d => Math.max(d.y0 * radius, d.y1 * radius - 1));
-
-const arcVisible = d => d.y1 <= 3 && d.y0 >= 1 && d.x1 > d.x0;
-
-const labelVisible = d => d.y1 <= 3 && d.y0 >= 1 && (d.y1 - d.y0) * (d.x1 - d.x0) > 0.05;
-
-function labelTransform(d, radius) {
-    const x = (((d.x0 + d.x1) / 2) * 180) / Math.PI;
-    const y = ((d.y0 + d.y1) / 2) * radius;
-    return `rotate(${x - 90}) translate(${y},0) rotate(${x < 180 ? 0 : 180})`;
-}
-
 sunburst.plugin = {
     type: "d3_sunburst",
     name: "[D3] Sunburst",
