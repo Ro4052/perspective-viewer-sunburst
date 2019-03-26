@@ -13,20 +13,8 @@ import {clickHandler} from "../interaction/clickHandler";
 import {arc, arcVisible} from "../arc/arc";
 import {labelVisible, labelTransform} from "../label/label";
 
-function sunburst(container, settings) {
-    const {width: containerWidth, height: containerHeight} = container.getBoundingClientRect();
-    const padding = 30;
-    const radius = (Math.min(containerWidth, containerHeight) - padding) / 6;
-
-    const {data, color} = treeData(settings)[0];
+function sunburstChart(sunburstElement, radius, {data, color}) {
     data.each(d => (d.current = d));
-
-    const sunburstElement = select(container)
-        .append("svg")
-        .style("width", "100%")
-        .style("height", containerHeight - padding / 2)
-        .append("g")
-        .attr("transform", `translate(${containerWidth / 2}, ${containerHeight / 2})`);
 
     const path = sunburstElement
         .append("g")
@@ -63,6 +51,23 @@ function sunburst(container, settings) {
     path.filter(d => d.children)
         .style("cursor", "pointer")
         .on("click", onClick);
+}
+
+function sunburst(container, settings) {
+    const {width: containerWidth, height: containerHeight} = container.getBoundingClientRect();
+    const padding = 30;
+    const radius = (Math.min(containerWidth, containerHeight) - padding) / 6;
+
+    treeData(settings).forEach(set => {
+        const sunburstSvg = select(container)
+            .append("svg")
+            .style("width", "100%")
+            .style("height", containerHeight - padding / 2)
+            .append("g")
+            .attr("transform", `translate(${containerWidth / 2}, ${containerHeight / 2})`);
+
+        sunburstChart(sunburstSvg, radius, set);
+    });
 }
 sunburst.plugin = {
     type: "d3_sunburst",
