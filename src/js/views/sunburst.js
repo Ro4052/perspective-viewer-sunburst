@@ -22,7 +22,7 @@ function sunburstChart(sunburstElement, radius, {data, color}) {
         .data(data.descendants().slice(1))
         .join("path")
         .attr("fill", d => color(d.data.color))
-        .attr("fill-opacity", d => (arcVisible(d.current) ? (d.children ? 1 : 0.5) : 0))
+        .attr("fill-opacity", d => (arcVisible(d.current) ? 0.8 : 0))
         .attr("d", d => arc(radius)(d.current));
 
     const label = sunburstElement
