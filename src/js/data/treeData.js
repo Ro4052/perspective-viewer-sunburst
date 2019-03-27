@@ -71,7 +71,7 @@ function getSplitNames(d) {
 
 function treeColor(settings, split) {
     if (settings.aggregates.length > 1) {
-        const colorDomain = extentLinear().accessors([d => getDataValue(d, settings.aggregates[1], split)])(settings.data);
+        const colorDomain = extentLinear().accessors([d => getDataValue(d, settings.aggregates[1], split)])(settings.data.slice(1));
         return d3.scaleSequential(d3.interpolateRainbow).domain(colorDomain);
     }
     return () => "rgb(31, 119, 180)";
